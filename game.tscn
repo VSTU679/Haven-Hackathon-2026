@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://bpw4mckekhisl"]
+
+[ext_resource type="PackedScene" uid="uid://dcwaxroi0nyav" path="res://player.tscn" id="1_80nbo"]
+[ext_resource type="PackedScene" uid="uid://b1fj1lfbw8lq" path="res://coins.tscn" id="2_e2o6t"]
+[ext_resource type="Script" uid="uid://dih3fxn5nuoii" path="res://game_manager.gd" id="3_feb5d"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_8nddg"]
+distance = -36.0
+
+[node name="Game" type="Node2D" unique_id=586764866]
+
+[node name="Player" parent="." unique_id=633632019 instance=ExtResource("1_80nbo")]
+position = Vector2(24, 19)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=47521142]
+position = Vector2(-24, -19)
+zoom = Vector2(4, 4)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=941642634]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1992839031]
+position = Vector2(24, 9)
+shape = SubResource("WorldBoundaryShape2D_8nddg")
+
+[node name="Coins" parent="." unique_id=254092045 instance=ExtResource("2_e2o6t")]
+position = Vector2(70, 33)
+
+[node name="GameManager" type="Node" parent="." unique_id=827285421]
+unique_name_in_owner = true
+script = ExtResource("3_feb5d")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="GameManager" unique_id=309767037]
+
+[node name="TimerLabel" type="Label" parent="GameManager/CanvasLayer" unique_id=1212342495]
+unique_name_in_owner = true
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 32
+
+[node name="Countdown" type="Timer" parent="GameManager" unique_id=418599909]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[node name="respawn" type="Marker2D" parent="." unique_id=1946582257]
+unique_name_in_owner = true
+
+[connection signal="body_entered" from="Coins" to="Player" method="_on_coins_body_entered"]
+[connection signal="timeout" from="GameManager/Countdown" to="Player" method="_on_countdown_timeout"]
